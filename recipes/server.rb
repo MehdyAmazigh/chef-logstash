@@ -11,7 +11,7 @@ include_recipe "logstash::packages"
 #Setup the configuration files via templates.  Take an array for template names, a cookbook to source, and an hash for the variables
 unless node['logstash']['server']['config_templates'].empty? || node['logstash']['server']['config_templates'].nil?
   node['logstash']['server']['config_templates'].each do |config_template|
-    template "/etc/logstash/#{config_template}.conf" do
+    template "/etc/logstash/conf.d/#{config_template}.conf" do
       source "#{config_template}.conf.erb"
       cookbook node['logstash']['server']['config_templates_cookbook']
       owner 'logstash'
