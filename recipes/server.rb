@@ -1,4 +1,4 @@
-if node.logstash['install_package'] = true
+if node.logstash['install_package'] == true
   #Install the package for logstash
   include_recipe "logstash::packages"
 else
@@ -32,13 +32,13 @@ unless node['logstash']['server']['config_templates'].nil? || node['logstash']['
 end
 
 #Do some service stuff if required
-if node.logstash.server['service_enable'] = true
+if node.logstash.server['service_enable'] == true
   service 'logstash' do
     supports :restart => true
     action :enable
   end
 end
 
-if node.logstash.server['install_contrib'] = true
+if node.logstash.server['install_contrib'] == true
   include_recipe "logstash::contrib"
 end
