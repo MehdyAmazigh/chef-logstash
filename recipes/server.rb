@@ -9,7 +9,7 @@ include_recipe "logstash::packages"
 #LS_CONF_DIR=/etc/logstash/conf.d
 
 #Setup the configuration files via templates.  Take an array for template names, a cookbook to source, and an hash for the variables
-unless node['logstash']['server']['config_templates'].empty? || node['logstash']['server']['config_templates'].nil?
+unless node['logstash']['server']['config_templates'].nil? || node['logstash']['server']['config_templates'].empty?
   node['logstash']['server']['config_templates'].each do |config_template|
     template "/etc/logstash/conf.d/#{config_template}.conf" do
       source "#{config_template}.conf.erb"
@@ -27,10 +27,13 @@ unless node['logstash']['server']['config_templates'].empty? || node['logstash']
 end
 
 #Do some service stuff if required
-if node['logstash']['server']['service_enable']
+if node.logstash.server['service_enable']
   service 'logstash' do
     supports :restart => true
     action :enable
   end
 end
 
+if node.logstash.server['install_contrib']
+  include_recipe "logstash::contrib"
+end
