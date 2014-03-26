@@ -1,5 +1,10 @@
-#Install the package for logstash
-include_recipe "logstash::packages"
+if node.logstash['install_package'] = true
+  #Install the package for logstash
+  include_recipe "logstash::packages"
+else
+  #Not implemented
+  raise 'No install method implemented other than package at this time'
+end
 
 #Setup configuration
 #If using the package (currently supported install method), most init changes are in /etc/sysconfig/logstash
@@ -27,13 +32,13 @@ unless node['logstash']['server']['config_templates'].nil? || node['logstash']['
 end
 
 #Do some service stuff if required
-if node.logstash.server['service_enable']
+if node.logstash.server['service_enable'] = true
   service 'logstash' do
     supports :restart => true
     action :enable
   end
 end
 
-if node.logstash.server['install_contrib']
+if node.logstash.server['install_contrib'] = true
   include_recipe "logstash::contrib"
 end
