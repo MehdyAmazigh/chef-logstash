@@ -2,21 +2,16 @@ case node[:platform]
 
 when "ubuntu","debian"
 
-execute "logstash_apt_key" do
-  command " wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && touch /home/ubuntu/.elasticsearch_key"
-  creates "/home/ubuntu/.elasticsearch_key"
-  action :run
+apt_repository 'elasticsearch' do
+  uri          'http://packages.elasticsearch.org/logstash/1.4/debian'
+  components   ['stable', 'main']
+  #keyserver    'http://packages.elasticsearch.org'
+  #key          'GPG-KEY-elasticsearch'
 end
 
-cookbook_file "/etc/apt/sources.list.d/elasticsearch.list" do
-  source "elasticsearch.list"
-  owner "root"
-  group "root"
-  mode "0644"
-end
-
-execute "update_apt" do
-  command "apt-get update"
+execute "elasticsearch_key" do
+  command " wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && touch /home/ubuntu/.key"
+  creates "/home/ubuntu/.key"
   action :run
 end
 
@@ -29,6 +24,7 @@ yum_repository 'logstash-1.4' do
   action :create
   only_if { node['logstash']['install_repo'] }
 end
+end
 
 #Install the package
 package 'logstash' do
@@ -37,5 +33,4 @@ package 'logstash' do
   end
   action :install
   only_if { node['logstash']['install_package'] }
-end
 end

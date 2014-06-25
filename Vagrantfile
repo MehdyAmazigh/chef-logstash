@@ -1,12 +1,20 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure("2") do |config|
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.require_version ">= 1.5.0"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   config.vm.hostname = "logstash-berkshelf"
+
+  # Set the version of chef to install using the vagrant-omnibus plugin
+  config.omnibus.chef_version = :latest
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "opscode-ubuntu-12.04-i386"
@@ -19,13 +27,7 @@ Vagrant.configure("2") do |config|
   # via the IP. Host-only networks can talk to the host machine as well as
   # any other machines on the same network, but cannot be accessed (through this
   # network interface) by any external networks.
-  config.vm.network :private_network, ip: "33.33.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-
-  # config.vm.network :public_network
+  config.vm.network :private_network, type: "dhcp"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -52,9 +54,6 @@ Vagrant.configure("2") do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  config.ssh.max_tries = 40
-  config.ssh.timeout   = 120
-
   # The path to the Berksfile to use with Vagrant Berkshelf
   # config.berkshelf.berksfile_path = "./Berksfile"
 
@@ -73,7 +72,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :chef_client do |chef|
     chef.chef_server_url        = "https://api.opscode.com/organizations/spscommerce"
     chef.validation_client_name = "spscommerce-validator"
-    chef.validation_key_path    = "/media/truecrypt1/git/spsc/chef-repo/.chef/spscommerce-validator.pem"
+    chef.validation_key_path    = "/Users/gstummer/git/chef/spscommerce/chef-repo/.chef/spscommerce-validator.pem"
 
     chef.run_list = [
         "recipe[logstash::default]"
