@@ -5,14 +5,7 @@ when "ubuntu","debian"
 apt_repository 'elasticsearch' do
   uri          'http://packages.elasticsearch.org/logstash/1.4/debian'
   components   ['stable', 'main']
-  #keyserver    'http://packages.elasticsearch.org'
-  #key          'GPG-KEY-elasticsearch'
-end
-
-execute "elasticsearch_key" do
-  command " wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add - && touch /home/ubuntu/.key"
-  creates "/home/ubuntu/.key"
-  action :run
+  key    'http://packages.elasticsearch.org/GPG-KEY-elasticsearch'
 end
 
 when "centos","rhel","oracle"
