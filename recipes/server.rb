@@ -39,6 +39,15 @@ if node.logstash.server['service_enable'] == true
   end
 end
 
+#check version file for non-conformance
+ruby_block 'clean up version file' do
+  block do
+    fileedit = Chef::Util::FileEdit.new('/opt/logstash/lib/logstash/version.rb')
+    fileedit.search_file_delete(/(-modified).*/)
+    fileedit.write_file
+  end
+end
+
 if node.logstash.server['install_contrib'] == true
   include_recipe "logstash::contrib"
 end
