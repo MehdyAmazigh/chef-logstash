@@ -43,7 +43,7 @@ end
 ruby_block 'clean up version file' do
   block do
     fileedit = Chef::Util::FileEdit.new('/opt/logstash/lib/logstash/version.rb')
-    fileedit.search_file_delete(/(-modified).*/)
+    fileedit.search_file_delete(/(-modified)/)
     fileedit.write_file
   end
 end
